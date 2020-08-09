@@ -7,9 +7,9 @@ import kotlin.collections.HashMap
 fun main() {
     print("Enter your order: ")
     val input = readLine()
-    println(input)
+//    println(input)
     val orderItems: List<String> = input!!.split(",").map { it -> it.trim() }
-    println(orderItems)
+//    println(orderItems)
     val os = OrdersService()
     os.addObserver(EmailService())
     val cart = os.createCart(orderItems)
@@ -59,7 +59,8 @@ class OrdersService : Observable() {
         var order = Order()
         order.total = total
         setChanged()
-        notifyObservers(order)
+        notifyObservers("error: item you ordered is out of stock")
+//        notifyObservers(order)
     }
 
     fun nForPriceOfMAdjustment(count: Int, N: Int, M: Int): Int {
