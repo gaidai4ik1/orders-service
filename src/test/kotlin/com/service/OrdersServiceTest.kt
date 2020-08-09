@@ -40,10 +40,4 @@ class OrdersServiceTest {
         assertEquals(expectedResult, result)
     }
 
-    @Test
-    fun testnFindTotal() {
-        val expectedTotal = 1.70
-        val total = os.findTotal(hashMapOf("apple" to 3, "orange" to 3), os.getPrices())
-        assertEquals(expectedTotal, total, 0.0)
-    }
 }

@@ -1,23 +1,24 @@
 package com.service
 
+import com.obj.Order
+import java.util.*
 import kotlin.collections.HashMap
 
-fun main(args: Array<String>) {
+fun main() {
     print("Enter your order: ")
     val input = readLine()
     println(input)
     val orderItems: List<String> = input!!.split(",").map { it -> it.trim() }
     println(orderItems)
-    val os: OrdersService = OrdersService()
+    val os = OrdersService()
+    os.addObserver(EmailService())
     val cart = os.createCart(orderItems)
     val priceHashMap = os.getPrices()
-    var total = os.findTotal(cart, priceHashMap)
+    os.findTotal(cart, priceHashMap)
 
-    println("total: $$total")
 }
 
-class OrdersService {
-
+class OrdersService : Observable() {
     fun createCart(orderItems: List<String>): HashMap<String, Int> {
         val cart: HashMap<String, Int> = HashMap<String, Int>()
         for (item in orderItems) {
@@ -31,7 +32,7 @@ class OrdersService {
         return cart
     }
 
-    fun findTotal(cart: HashMap<String, Int>, priceHashMap: HashMap<String, Double>): Double {
+    fun findTotal(cart: HashMap<String, Int>, priceHashMap: HashMap<String, Double>) {
         var total = 0.0
         for ((item, count) in cart) {
             var adjustedCount = 0
@@ -55,7 +56,10 @@ class OrdersService {
                 println("ERROR: unknown item $item")
             }
         }
-        return total
+        var order = Order()
+        order.total = total
+        setChanged()
+        notifyObservers(order)
     }
 
     fun nForPriceOfMAdjustment(count: Int, N: Int, M: Int): Int {
